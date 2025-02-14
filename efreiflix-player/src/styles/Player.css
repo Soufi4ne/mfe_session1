@@ -1,0 +1,547 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+body.player-active {
+  overflow: hidden;
+}
+
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  overflow: hidden;
+  z-index: 1001;
+}
+
+.video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.preview-video {
+  display: none;
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: none;
+  border: none;
+  color: white;
+  padding: 10px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 100;
+}
+
+.back-button.visible {
+  opacity: 1;
+}
+
+.cursor-hidden {
+  cursor: none;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2em;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+  color: #e50914;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.controls-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 40;
+}
+
+.controls-overlay.visible,
+.back-button.visible {
+  opacity: 1;
+}
+
+.progress-container {
+  position: relative;
+  padding: 0 0 5px 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+  position: relative;
+  transition: height 0.2s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.progress-container:hover .progress-bar {
+  height: 6px;
+}
+
+.progress-buffer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4);
+  transition: width 0.2s ease;
+}
+
+.progress {
+  height: 100%;
+  background: #e50914;
+  border-radius: 2px;
+  position: relative;
+  transition: width 0.1s linear;
+  z-index: 2;
+}
+
+.progress::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background: #e50914;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 3;
+}
+
+.progress-container:hover .progress::after {
+  opacity: 1;
+}
+
+.progress-time {
+  display: flex;
+  justify-content: space-between;
+  color: white;
+  font-size: 12px;
+  margin-top: 5px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-weight: 500;
+}
+
+.progress-container:hover .progress-time {
+  opacity: 1;
+}
+
+.progress-time-preview {
+  position: absolute;
+  top: -25px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 2px 4px;
+  border-radius: 2px;
+  font-size: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.progress-container:hover .progress-time-preview {
+  opacity: 1;
+}
+
+.controls-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 5px 20px;
+  position: relative;
+  z-index: 45;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  height: 36px;
+}
+
+.controls-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-right: 10px;
+}
+
+.control-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+
+.control-button .bi-rewind,
+.control-button .bi-fast-forward {
+  width: 32px;
+  height: 32px;
+}
+
+.control-button:hover {
+  transform: scale(1.15);
+  color: #e50914;
+}
+
+.control-button:active {
+  transform: scale(0.95);
+}
+
+.seek-label {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  opacity: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  font-weight: 500;
+  transform-origin: bottom;
+  z-index: 100;
+}
+
+.control-button:hover .seek-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px) scale(1.05);
+}
+
+/* Add hover effect for the entire container */
+.video-container:not(.cursor-hidden):hover .controls-overlay,
+.video-container:not(.cursor-hidden):hover .back-button {
+  opacity: 1;
+}
+
+/* Hide controls when cursor is hidden */
+.video-container.cursor-hidden .controls-overlay,
+.video-container.cursor-hidden .back-button {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Keep controls visible when speed menu is open, even if cursor is hidden */
+.video-container.cursor-hidden .controls-overlay.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Update fullscreen styles */
+.video-container:fullscreen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.video-container:fullscreen .video-player {
+  height: 100vh;
+}
+
+/* Support for Safari */
+.video-container:-webkit-full-screen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.video-container:-webkit-full-screen .video-player {
+  height: 100vh;
+}
+
+/* Support for Firefox */
+.video-container:-moz-full-screen {
+  width: 100vw;
+  height: 100vh;
+}
+
+.video-container:-moz-full-screen .video-player {
+  height: 100vh;
+}
+
+.video-info {
+  text-align: left;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.video-title {
+  font-size: 1.2rem;
+  margin: 0;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  margin-bottom: 4px;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.volume-slider {
+  width: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  height: 4px;
+  border-radius: 2px;
+}
+
+.volume-control:hover .volume-slider {
+  width: 100px;
+  opacity: 1;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #e50914;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.speed-control {
+  position: relative;
+  margin-right: 15px;
+}
+
+.speed-menu {
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 4px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 10px;
+  font-family: "Montserrat", sans-serif;
+  z-index: 60;
+  min-width: 100px;
+}
+
+.speed-option {
+  background: none;
+  border: none;
+  color: white;
+  padding: 4px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.speed-option:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.speed-option.active {
+  color: #e50914;
+}
+
+/* Make sure controls stay visible when speed menu is open */
+.controls-overlay.visible,
+.controls-overlay:hover {
+  opacity: 1;
+}
+
+.preview-container {
+  position: absolute;
+  bottom: 25px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 4px;
+  padding: 4px;
+  display: none;
+  pointer-events: none;
+  transition: transform 0.05s ease;
+  z-index: 50;
+}
+
+.progress-container:hover .preview-container {
+  display: block;
+}
+
+.preview-canvas {
+  width: 160px;
+  height: 90px;
+  border-radius: 2px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  will-change: transform;
+}
+
+.preview-time {
+  text-align: center;
+  color: white;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Improve preview performance */
+.preview-canvas {
+  width: 160px;
+  height: 90px;
+  border-radius: 2px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  will-change: transform;
+}
+
+/* Ensure controls are always above video */
+.controls-buttons {
+  position: relative;
+  z-index: 45;
+}
+
+/* Ensure speed menu is above other controls */
+.speed-menu {
+  z-index: 60;
+}
+
+/* Ensure consistent button sizes on the right */
+.controls-right .control-button {
+  min-width: 40px;
+  justify-content: center;
+}
+
+/* Add specific margins for right-side buttons */
+.controls-right .control-button:not(:last-child) {
+  margin-right: 5px;
+}
+
+/* Adjust fullscreen button spacing */
+.controls-right .control-button:last-child {
+  margin-left: auto;
+}
+
+/* Description overlay styles */
+.description-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.4) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 60px;
+  z-index: 30;
+  animation: fadeIn 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.description-content {
+  max-width: 600px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.description-content h1 {
+  font-size: 2.5rem;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.description-content h2 {
+  font-size: 1.5rem;
+  margin: 0 0 16px 0;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.description-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Ensure description overlay is below controls */
+.controls-overlay {
+  z-index: 40;
+}
+
+.speed-counter {
+  font-weight: bold;
+  font-size: 1.2em;
+  color: white;
+  margin-right: 4px;
+}

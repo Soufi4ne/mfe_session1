@@ -1,0 +1,50 @@
+.description-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.7) 40%, rgba(0, 0, 0, 0.4) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 60px;
+  z-index: 30;
+  animation: fadeIn 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.description-content {
+  max-width: 600px;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.description-content h1 {
+  font-size: 2.5rem;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.description-content h2 {
+  font-size: 1.5rem;
+  margin: 0 0 16px 0;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.description-content p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 400;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

@@ -33,20 +33,94 @@ services:
     networks:
       - efreiflix-network
 
-  efreiflix-mfe-skeleton:
-    container_name: efreiflix-mfe-skeleton
+  efreiflix-searchbar:
+    container_name: efreiflix-searchbar
     build:
       context: .
       dockerfile: Dockerfile
       args:
-        SERVICE_PATH: efreiflix-mfe-skeleton
+        SERVICE_PATH: efreiflix-searchbar
     ports:
-      - "3002:3002"
+      - "3010:3010"
     volumes:
-      - ./efreiflix-mfe-skeleton:/app
+      - ./efreiflix-searchbar:/app
       - /app/node_modules
     networks:
       - efreiflix-network
+
+  efreiflix-footer:
+    container_name: efreiflix-footer
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: efreiflix-footer
+    ports:
+      - "3009:3009"
+    volumes:
+      - ./efreiflix-footer:/app
+      - /app/node_modules
+    networks:
+      - efreiflix-network
+
+  efreiflix-item:
+    container_name: efreiflix-item
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: efreiflix-item
+    ports:
+      - "3008:3008"
+    volumes:
+      - ./efreiflix-item:/app
+      - /app/node_modules
+    networks:
+      - efreiflix-network
+
+  efreiflix-player:
+    container_name: efreiflix-player
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: efreiflix-player
+    ports:
+      - "3007:3007"
+    volumes:
+      - ./efreiflix-player:/app
+      - /app/node_modules
+    networks:
+      - efreiflix-network
+
+  efreiflix-mfe-breadcrumbs:
+    container_name: efreiflix-mfe-Breadcrumbs
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: efreiflix-mfe-Breadcrumbs
+    ports:
+      - "3005:3005"
+    volumes:
+      - ./efreiflix-mfe-Breadcrumbs:/app
+      - /app/node_modules
+    networks:
+      - efreiflix-network
+  # efreiflix-mfe-skeleton:
+  #   container_name: efreiflix-mfe-skeleton
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #     args:
+  #       SERVICE_PATH: efreiflix-mfe-skeleton
+  #   ports:
+  #     - "3002:3002"
+  #   volumes:
+  #     - ./efreiflix-mfe-skeleton:/app
+  #     - /app/node_modules
+  #   networks:
+  #     - efreiflix-network
 
   efreiflix-shell:
     container_name: efreiflix-shell
@@ -60,7 +134,10 @@ services:
     depends_on:
       - efreiflix-db
       - efreiflix-header
-      - efreiflix-mfe-skeleton
+      - efreiflix-footer
+      - efreiflix-player
+      - efreiflix-item
+      # - efreiflix-mfe-skeleton
     volumes:
       - ./efreiflix-shell:/app
       - /app/node_modules

@@ -21,10 +21,10 @@ module.exports = {
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "http://localhost:30010/", // URL publique de base pour les assets (IMPORTANT pour Module Federation)
+    publicPath: "http://localhost:3001/", // URL publique de base pour les assets (IMPORTANT pour Module Federation)
   },
   devServer: {
-    port: 3010, // Port du serveur de développement (IMPORTANT : doit être unique pour chaque MFE)
+    port: 3001, // Port du serveur de développement (IMPORTANT : doit être unique pour chaque MFE)
     static: {
       directory: path.join(__dirname, "public"),
     },
@@ -44,22 +44,25 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            presets: ["@babel/preset-react", "@babel/preset-env"],
-          },
-        },
+            presets: ['@babel/preset-react', '@babel/preset-env']
+          }
+        }
       },
       {
         test: /\.css$/,
-        use: ["style-loader", "css-loader", "postcss-loader"],
-      },
-    ],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
+      }
+    ]
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "searchbar", // Nom UNIQUE du Micro Frontend (utilisé par le Shell pour l'importer)
+      name: "header", // Nom UNIQUE du Micro Frontend (utilisé par le Shell pour l'importer)
       filename: "remoteEntry.js", // Nom du fichier d'entrée exposé (conventionnel)
+      remotes: {
+        shell: "shell@http://localhost:3000/remoteEntry.js",
+      },
       exposes: {
-        "./SearchBar": "./src/SearchBar", // Expose le composant Header (chemin relatif)
+        "./Header": "./src/Header", // Expose le composant Header (chemin relatif)
       },
       shared: {
         // Configuration des dépendances partagées
