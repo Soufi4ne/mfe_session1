@@ -1,0 +1,52 @@
+/* Styles globaux */
+body {
+  background-color: #141414;
+  color: #fff;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Animation pour les éléments interactifs */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse:hover {
+  animation: pulse 1s infinite ease-in-out;
+}
+
+/* Styles pour les boutons */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-primary {
+  background-color: #e50914;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: #b20710;
+}
+
+.btn-secondary {
+  background-color: rgba(109, 109, 110, 0.7);
+  color: white;
+  border: none;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(109, 109, 110, 1);
+} 

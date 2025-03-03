@@ -107,6 +107,37 @@ services:
       - /app/node_modules
     networks:
       - efreiflix-network
+
+  efreiflix-product-details:
+    container_name: efreiflix-product-details
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: efreiflix-product-details
+    ports:
+      - "3002:3002"
+    volumes:
+      - ./efreiflix-product-details:/app
+      - /app/node_modules
+    networks:
+      - efreiflix-network
+
+  efreiflix-comments:
+    container_name: efreiflix-comments
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        SERVICE_PATH: efreiflix-comments
+    ports:
+      - "3003:3003"
+    volumes:
+      - ./efreiflix-comments:/app
+      - /app/node_modules
+    networks:
+      - efreiflix-network
+
   # efreiflix-mfe-skeleton:
   #   container_name: efreiflix-mfe-skeleton
   #   build:
@@ -137,6 +168,8 @@ services:
       - efreiflix-footer
       - efreiflix-player
       - efreiflix-item
+      - efreiflix-product-details
+      - efreiflix-comments
       # - efreiflix-mfe-skeleton
     volumes:
       - ./efreiflix-shell:/app
